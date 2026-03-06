@@ -1,0 +1,32 @@
+# 依存関係（ビルド時に npm ci で再インストールする）
+node_modules
+
+# Next.js ビルド出力（ビルド時に再生成する）
+.next
+
+# Git
+.git
+.gitignore
+
+# 環境変数ファイル（秘密情報を含むためコンテナに入れない）
+.env
+.env.*
+.env.local
+.env.*.local
+
+# エディタ・OS
+.vscode
+.idea
+.DS_Store
+*.swp
+*.swo
+
+# Docker自身
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# その他
+README.md
+*.md
+tsconfig.tsbuildinfo

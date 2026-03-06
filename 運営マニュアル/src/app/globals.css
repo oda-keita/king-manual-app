@@ -1,0 +1,1444 @@
+/* =====================================================
+   KING Operation Manual Generator
+   World-class Premium Dark UI — Awwwards-grade Design
+   ===================================================== */
+
+/* ===== フォント ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ===== デザイントークン ===== */
+:root {
+    --color-bg: #000000;
+    --color-surface: #1D1D1F;
+    --color-surface-glass: rgba(22, 22, 24, 0.55);
+    --color-surface-glass-hover: rgba(30, 30, 33, 0.65);
+    --color-border: rgba(255, 255, 255, 0.06);
+    --color-border-glass: rgba(255, 255, 255, 0.08);
+    --color-border-hover: rgba(255, 90, 0, 0.35);
+
+    --color-text: #F5F5F7;
+    --color-text-secondary: #86868B;
+    --color-text-muted: #48484A;
+
+    --color-accent: #FF5A00;
+    --color-accent-light: #FF7B33;
+    --color-accent-dark: #CC4800;
+    --color-accent-glow: rgba(255, 90, 0, 0.20);
+
+    --color-success: #30D158;
+    --color-error: #FF453A;
+
+    --gradient-accent: linear-gradient(135deg, #FF5A00 0%, #FF7B33 50%, #FF9A5C 100%);
+    --gradient-hero: linear-gradient(180deg, #FFFFFF 0%, #A1A1A6 100%);
+    --gradient-glass-border: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.0) 100%);
+
+    --shadow-card: 0 8px 40px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-glow-sm: 0 0 30px rgba(255, 90, 0, 0.08);
+    --shadow-glow-md: 0 0 50px rgba(255, 90, 0, 0.12);
+    --shadow-glow-lg: 0 0 80px rgba(255, 90, 0, 0.18);
+    --shadow-btn: 0 6px 24px rgba(255, 90, 0, 0.30);
+    --shadow-btn-hover: 0 10px 40px rgba(255, 90, 0, 0.45);
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Yu Gothic", "Noto Sans JP", "Inter", sans-serif;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --max-width: 960px;
+    --radius-sm: 14px;
+    --radius-md: 18px;
+    --radius-lg: 28px;
+    --radius-pill: 9999px;
+}
+
+/* ===== リセット ===== */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* ====================================================
+   背景 — ノイズテクスチャ + Mesh Gradient Orbs
+   ==================================================== */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    /* SVGノイズテクスチャ */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    opacity: 0.025;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 60% 50% at 15% 20%, rgba(255, 90, 0, 0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 85% 75%, rgba(30, 60, 180, 0.03) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 50% 10%, rgba(255, 120, 50, 0.03) 0%, transparent 60%);
+    animation: orbFloat 25s ease-in-out infinite alternate;
+}
+
+@keyframes orbFloat {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(1%, -1%) scale(1.02);
+    }
+
+    100% {
+        transform: translate(-1%, 1%) scale(0.98);
+    }
+}
+
+/* ====================================================
+   共通 Glassmorphism Mixin — 極細インナーボーダー
+   ==================================================== */
+/* glass系ヘルパーは各コンポーネントでインライン */
+
+/* ====================================================
+   メインレイアウト
+   ==================================================== */
+.main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1.5rem 5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* フェードイン・アウト */
+.main--hidden {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(20px) scale(0.98);
+}
+
+.main--visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+    transition: opacity 0.8s var(--ease-out-expo),
+        filter 0.8s var(--ease-out-expo),
+        transform 0.8s var(--ease-out-expo);
+}
+
+/* ====================================================
+   Stagger アニメーション（要素の順次浮上）
+   ==================================================== */
+.stagger-item {
+    opacity: 0;
+    transform: translateY(24px);
+}
+
+.stagger-item--visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.7s var(--ease-out-expo),
+        transform 0.7s var(--ease-out-expo);
+}
+
+/* stagger遅延はインラインstyleで transitionDelay を指定 */
+
+/* ====================================================
+   ヒーローヘッダー
+   ==================================================== */
+.hero {
+    text-align: center;
+    padding: 7rem 0 4.5rem;
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-width);
+    width: 100%;
+}
+
+.hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.1rem;
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--color-border-glass);
+    /* ガラスの光反射 */
+    border-top-color: rgba(255, 255, 255, 0.10);
+    border-left-color: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-pill);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.hero__badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 8px var(--color-accent-glow);
+    animation: pulseDot 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 8px var(--color-accent-glow);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.7);
+        box-shadow: 0 0 4px var(--color-accent-glow);
+    }
+}
+
+.hero__title {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.hero__title-accent {
+    -webkit-text-fill-color: transparent;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 0 40px rgba(255, 90, 0, 0.25));
+}
+
+.hero__subtitle {
+    font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+    color: var(--color-text-secondary);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    margin-top: 0.5rem;
+}
+
+/* ====================================================
+   コンテンツコンテナ
+   ==================================================== */
+.container {
+    width: 100%;
+    max-width: var(--max-width);
+    position: relative;
+    z-index: 1;
+}
+
+/* ====================================================
+   セクションヘッダー
+   ==================================================== */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-header__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: rgba(255, 90, 0, 0.08);
+    border: 1px solid rgba(255, 90, 0, 0.12);
+    color: var(--color-accent);
+    flex-shrink: 0;
+}
+
+.section-header__text h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.section-header__text p {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.1rem;
+}
+
+/* ====================================================
+   アップロードグリッド
+   ==================================================== */
+.upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+/* ====================================================
+   ドロップゾーンカード — 極限Glassmorphism
+   枠線なし。ガラスの光反射で境界を表現。
+   ==================================================== */
+.dropzone-card {
+    position: relative;
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    /* 極細ガラスボーダー（上辺と左辺に光の反射） */
+    border: 1px solid var(--color-border);
+    border-top-color: rgba(255, 255, 255, 0.10);
+    border-left-color: rgba(255, 255, 255, 0.07);
+    border-radius: var(--radius-md);
+    padding: 2.25rem 1.5rem;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 180px;
+    overflow: hidden;
+    transition: transform 0.5s var(--ease-spring),
+        box-shadow 0.5s var(--ease-spring),
+        border-color 0.4s var(--ease-smooth);
+    will-change: transform;
+    /* Tiltの基準 */
+    transform-style: preserve-3d;
+    perspective: 800px;
+}
+
+/* 内部グロー（ホバー時にorangeが滲む） */
+.dropzone-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 90, 0, 0.0) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-smooth);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 光のハイライト（上端に走る光線） */
+.dropzone-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dropzone-card:hover {
+    border-color: rgba(255, 90, 0, 0.25);
+    box-shadow: var(--shadow-glow-sm), 0 12px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+.dropzone-card:hover::before {
+    opacity: 1;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 90, 0, 0.06) 0%, transparent 70%);
+}
+
+/* ドラッグOVER */
+.dropzone-card--active {
+    border-color: var(--color-accent) !important;
+    box-shadow: var(--shadow-glow-lg), 0 0 60px rgba(255, 90, 0, 0.10) !important;
+}
+
+.dropzone-card--active::before {
+    opacity: 1 !important;
+    background: radial-gradient(ellipse at 50% 50%, rgba(255, 90, 0, 0.10) 0%, transparent 60%) !important;
+}
+
+/* ファイル選択済み */
+.dropzone-card--has-file {
+    border-color: rgba(255, 90, 0, 0.20);
+}
+
+.dropzone-card--has-file::before {
+    opacity: 0.6;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 90, 0, 0.04) 0%, transparent 60%);
+}
+
+.dropzone-card--main {
+    grid-column: 1 / -1;
+    min-height: 200px;
+    padding: 2.75rem 2rem;
+}
+
+.dropzone-card__icon {
+    position: relative;
+    z-index: 1;
+    color: var(--color-text-muted);
+    transition: all 0.5s var(--ease-spring);
+}
+
+.dropzone-card:hover .dropzone-card__icon {
+    color: var(--color-accent);
+    transform: translateY(-4px) scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(255, 90, 0, 0.30));
+}
+
+.dropzone-card--has-file .dropzone-card__icon {
+    color: var(--color-accent);
+    filter: drop-shadow(0 0 8px rgba(255, 90, 0, 0.20));
+}
+
+.dropzone-card__label {
+    position: relative;
+    z-index: 1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.dropzone-card__hint {
+    position: relative;
+    z-index: 1;
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.dropzone-card__filename {
+    position: relative;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.3rem 0.9rem;
+    background: rgba(255, 90, 0, 0.06);
+    border: 1px solid rgba(255, 90, 0, 0.12);
+    border-radius: var(--radius-pill);
+    animation: popIn 0.4s var(--ease-spring);
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.dropzone-card__badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.58rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+    color: var(--color-text-muted);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border);
+    letter-spacing: 0.04em;
+    z-index: 1;
+}
+
+.dropzone-card__remove {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 2;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 69, 58, 0.08);
+    border: 1px solid rgba(255, 69, 58, 0.15);
+    border-radius: 50%;
+    color: var(--color-error);
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.3s var(--ease-spring);
+}
+
+.dropzone-card__remove:hover {
+    background: rgba(255, 69, 58, 0.18);
+    border-color: var(--color-error);
+    transform: scale(1.15) rotate(90deg);
+}
+
+.dropzone__input {
+    display: none;
+}
+
+/* ====================================================
+   ファイルリスト
+   ==================================================== */
+.file-list {
+    margin-bottom: 2rem;
+}
+
+.file-list__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.file-list__count {
+    font-size: 0.78rem;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.file-list__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+    border-top-color: rgba(255, 255, 255, 0.07);
+    border-radius: var(--radius-sm);
+    transition: all 0.4s var(--ease-spring);
+    animation: slideUp 0.5s var(--ease-out-expo);
+}
+
+.file-item:hover {
+    border-color: rgba(255, 255, 255, 0.10);
+    transform: translateX(4px);
+}
+
+.file-item__icon {
+    color: var(--color-accent);
+    flex-shrink: 0;
+}
+
+.file-item__details {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-item__name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-item__size {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+}
+
+.file-item__remove {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: all 0.3s var(--ease-spring);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.file-item__remove:hover {
+    color: var(--color-error);
+    background: rgba(255, 69, 58, 0.08);
+    transform: scale(1.15);
+}
+
+/* ====================================================
+   生成ボタン — Magnetic Pill
+   ==================================================== */
+.generate-btn {
+    width: 100%;
+    padding: 1.1rem 2rem;
+    font-size: 1rem;
+    font-weight: 650;
+    font-family: var(--font-sans);
+    color: white;
+    background: var(--gradient-accent);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    box-shadow: var(--shadow-btn);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.5s var(--ease-spring),
+        box-shadow 0.5s var(--ease-spring);
+    will-change: transform;
+}
+
+/* 光のスウィープ */
+.generate-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+    transition: left 0.6s var(--ease-out-expo);
+    z-index: 1;
+}
+
+.generate-btn:hover:not(:disabled)::before {
+    left: 120%;
+}
+
+.generate-btn:hover:not(:disabled) {
+    transform: scale(1.025) translateY(-2px);
+    box-shadow: var(--shadow-btn-hover);
+}
+
+.generate-btn:active:not(:disabled) {
+    transform: scale(0.98);
+    transition-duration: 0.1s;
+}
+
+.generate-btn:disabled {
+    opacity: 0.30;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.generate-btn__icon {
+    position: relative;
+    z-index: 2;
+}
+
+.generate-btn__text {
+    position: relative;
+    z-index: 2;
+}
+
+/* ====================================================
+   ローディング進捗
+   ==================================================== */
+.progress-section {
+    margin-top: 2.5rem;
+    animation: fadeIn 0.5s var(--ease-out-expo);
+}
+
+/* オレンジ光のプログレスバー */
+.progress-bar-container {
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--gradient-accent);
+    border-radius: 2px;
+    transition: width 0.8s var(--ease-out-expo);
+    position: relative;
+    box-shadow: 0 0 16px rgba(255, 90, 0, 0.40);
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 8px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 12px var(--color-accent), 0 0 24px rgba(255, 90, 0, 0.3);
+    animation: barGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes barGlow {
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 12px var(--color-accent), 0 0 24px rgba(255, 90, 0, 0.3);
+    }
+
+    50% {
+        opacity: 0.5;
+        box-shadow: 0 0 6px var(--color-accent);
+    }
+}
+
+.progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.5s var(--ease-spring);
+}
+
+.progress-step--active {
+    background: rgba(255, 90, 0, 0.05);
+    border: 1px solid rgba(255, 90, 0, 0.10);
+}
+
+.progress-step--done {
+    opacity: 0.5;
+}
+
+.progress-step--pending {
+    opacity: 0.2;
+}
+
+.progress-step__icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.progress-step--active .progress-step__icon {
+    background: rgba(255, 90, 0, 0.10);
+    color: var(--color-accent);
+}
+
+.progress-step--done .progress-step__icon {
+    background: rgba(48, 209, 88, 0.08);
+    color: var(--color-success);
+}
+
+.progress-step--pending .progress-step__icon {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--color-text-muted);
+}
+
+.progress-step__content {
+    flex: 1;
+}
+
+.progress-step__label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.progress-step--active .progress-step__label {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.progress-step--done .progress-step__label {
+    color: var(--color-success);
+}
+
+/* Text Ticker — ステータスがスロット風に切り替わる */
+.text-ticker {
+    height: 1.4em;
+    overflow: hidden;
+    position: relative;
+}
+
+.text-ticker__item {
+    display: block;
+    animation: tickerSlide 0.5s var(--ease-out-expo);
+}
+
+@keyframes tickerSlide {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 洗練されたスピナーリング */
+.spinner-ring {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 90, 0, 0.15);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ====================================================
+   完了画面
+   ==================================================== */
+.result {
+    text-align: center;
+    padding: 4rem 1rem;
+    animation: fadeIn 0.6s var(--ease-out-expo);
+}
+
+.result__icon-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: rgba(48, 209, 88, 0.08);
+    border: 1px solid rgba(48, 209, 88, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: celebrateIn 0.7s var(--ease-spring);
+}
+
+.result__icon-container svg {
+    color: var(--color-success);
+}
+
+@keyframes celebrateIn {
+    0% {
+        transform: scale(0) rotate(-20deg);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.result__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.result__text {
+    font-size: 0.88rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: white;
+    background: var(--gradient-accent);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: var(--shadow-btn);
+    transition: all 0.4s var(--ease-spring);
+    position: relative;
+    overflow: hidden;
+}
+
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.6s var(--ease-out-expo);
+}
+
+.download-btn:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-btn-hover);
+}
+
+.download-btn:hover::before {
+    left: 120%;
+}
+
+.reset-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 1.5rem auto 0;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    color: var(--color-text-muted);
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: all 0.3s var(--ease-spring);
+}
+
+.reset-btn:hover {
+    color: var(--color-text-secondary);
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+    transform: translateY(-1px);
+}
+
+/* ====================================================
+   エラー表示
+   ==================================================== */
+.error {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: rgba(255, 69, 58, 0.04);
+    border: 1px solid rgba(255, 69, 58, 0.12);
+    border-top-color: rgba(255, 69, 58, 0.18);
+    border-radius: var(--radius-md);
+    animation: slideUp 0.4s var(--ease-out-expo);
+}
+
+.error__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.error__icon {
+    color: var(--color-error);
+    flex-shrink: 0;
+}
+
+.error__title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #FF6961;
+}
+
+.error__text {
+    font-size: 0.82rem;
+    color: rgba(255, 105, 97, 0.85);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.error__hint {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 69, 58, 0.08);
+    line-height: 1.5;
+}
+
+/* ====================================================
+   フッター
+   ==================================================== */
+.footer {
+    margin-top: 5rem;
+    padding: 2rem 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.footer__text {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+}
+
+/* ====================================================
+   アニメーション共通
+   ==================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ====================================================
+   ログイン画面 — シネマティックゲートウェイ
+   ==================================================== */
+.login-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1.5rem;
+}
+
+/* 背景メッシュグラデーションオーブ */
+.login-screen__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 50% 40% at 50% 30%, rgba(255, 90, 0, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 50% at 20% 70%, rgba(40, 60, 200, 0.03) 0%, transparent 60%),
+        radial-gradient(ellipse 25% 35% at 80% 80%, rgba(255, 120, 50, 0.03) 0%, transparent 50%);
+    animation: orbFloat 20s ease-in-out infinite alternate;
+}
+
+.login-card {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(32px) saturate(1.3);
+    -webkit-backdrop-filter: blur(32px) saturate(1.3);
+    border: 1px solid var(--color-border-glass);
+    border-top-color: rgba(255, 255, 255, 0.12);
+    border-left-color: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    padding: 3.5rem 2.5rem 2.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-card), var(--shadow-glow-sm);
+    z-index: 2;
+}
+
+/* Shake */
+.login-card--shake {
+    animation: shake 0.45s var(--ease-spring);
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    12% {
+        transform: translateX(-10px) rotate(-0.5deg);
+    }
+
+    24% {
+        transform: translateX(10px) rotate(0.5deg);
+    }
+
+    36% {
+        transform: translateX(-7px) rotate(-0.3deg);
+    }
+
+    48% {
+        transform: translateX(7px) rotate(0.3deg);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    72% {
+        transform: translateX(4px);
+    }
+
+    84% {
+        transform: translateX(-2px);
+    }
+}
+
+.login-card__logo {
+    margin-bottom: 1.75rem;
+}
+
+.login-card__logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(255, 90, 0, 0.08);
+    color: var(--color-accent);
+    border: 1px solid rgba(255, 90, 0, 0.15);
+    box-shadow: 0 0 24px rgba(255, 90, 0, 0.10);
+}
+
+.login-card__title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+}
+
+.login-card__title-accent {
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(255, 90, 0, 0.25));
+}
+
+.login-card__subtitle {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.login-card__input-wrapper {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.login-card__input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+    transition: color 0.3s var(--ease-spring);
+}
+
+.login-card__input {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.75rem;
+    font-size: 0.88rem;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: all 0.4s var(--ease-spring);
+}
+
+.login-card__input::placeholder {
+    color: var(--color-text-muted);
+    font-weight: 400;
+}
+
+.login-card__input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 90, 0, 0.12), 0 0 20px rgba(255, 90, 0, 0.06);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.login-card__input-wrapper:focus-within .login-card__input-icon {
+    color: var(--color-accent);
+}
+
+.login-card__input--error {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(255, 69, 58, 0.12);
+}
+
+.login-card__error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    color: var(--color-error);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    animation: slideUp 0.3s var(--ease-out-expo);
+}
+
+.login-card__btn {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 0.9rem 2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: white;
+    background: var(--gradient-accent);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    box-shadow: var(--shadow-btn);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    letter-spacing: 0.02em;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s var(--ease-spring);
+}
+
+.login-card__btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.6s var(--ease-out-expo);
+}
+
+.login-card__btn:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-btn-hover);
+}
+
+.login-card__btn:hover::before {
+    left: 120%;
+}
+
+.login-card__btn:active {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
+}
+
+.login-card__footer {
+    margin-top: 2.25rem;
+    font-size: 0.62rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+    opacity: 0.5;
+}
+
+/* ====================================================
+   シネマティックトランジション —
+   ログイン成功時の光の爆発
+   ==================================================== */
+.login-screen--exit {
+    animation: loginExit 1s var(--ease-out-expo) forwards;
+}
+
+.login-screen--exit .login-card {
+    animation: cardExit 0.6s var(--ease-out-expo) forwards;
+}
+
+/* 光の爆発フラッシュ */
+.login-screen--exit::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 90, 0, 0.15) 0%, rgba(255, 120, 50, 0.05) 40%, transparent 70%);
+    z-index: 200;
+    animation: flashBurst 0.8s var(--ease-out-expo) forwards;
+}
+
+@keyframes flashBurst {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
+
+@keyframes loginExit {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+    }
+
+    60% {
+        opacity: 0.5;
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 0;
+        filter: blur(12px);
+        pointer-events: none;
+    }
+}
+
+@keyframes cardExit {
+    0% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.92) translateY(-30px);
+        opacity: 0;
+    }
+}
+
+/* Stagger用 — ログイン画面要素の順次表示 */
+.login-stagger {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggerIn 0.6s var(--ease-out-expo) forwards;
+}
+
+@keyframes staggerIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ====================================================
+   レスポンシブ
+   ==================================================== */
+@media (max-width: 768px) {
+    .hero {
+        padding: 5rem 0 3rem;
+    }
+
+    .hero__title {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+    }
+
+    .upload-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dropzone-card {
+        min-height: 140px;
+        padding: 1.75rem 1rem;
+    }
+
+    .dropzone-card--main {
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main {
+        padding: 0 1rem 3rem;
+    }
+
+    .hero {
+        padding: 3.5rem 0 2rem;
+    }
+
+    .hero__title {
+        font-size: 2rem;
+    }
+
+    .hero__subtitle {
+        font-size: 0.78rem;
+    }
+
+    .generate-btn {
+        padding: 0.9rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .login-card {
+        padding: 2.5rem 1.5rem 2rem;
+    }
+
+    .login-card__title {
+        font-size: 1.2rem;
+    }
+
+    .login-card__title-accent {
+        font-size: 1.7rem;
+    }
+}
